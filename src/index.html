@@ -5,9 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>08 - Fullscreen and resizing</title>
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./ui/customCursor/style.scss" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
   </head>
   <body>
     <canvas class="webgl"></canvas>
     <script type="module" src="./builder.js"></script>
+    <div class="cursor">
+      <div class="cursor__ball cursor__ball--big">
+        <svg height="30" width="30">
+          <circle cx="15" cy="15" r="12" stroke-width="0"></circle>
+        </svg>
+      </div>
+
+      <div class="cursor__ball cursor__ball--small">
+        <svg height="10" width="10">
+          <circle cx="5" cy="5" r="4" stroke-width="0"></circle>
+        </svg>
+      </div>
+    </div>
+    <script src="./ui/customCursor/cursor.js"></script>
   </body>
 </html>
