@@ -1,0 +1,188 @@
+newmtl MeshesteslaModel3capot0031Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.00102419 0.00102419 0.00102419 
+
+d 0.301961
+
+Ns 0
+
+newmtl Lugs1Mtl
+Material Color
+Ka 0.383775 0.383775 0.383775
+Kd 0.383775 0.383775 0.383775
+Ks 0.03311 0.03311 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ns Lugs1_spec.png
+
+newmtl MeshesteslaModel3int1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.00102419 0.00102419 0.00102419 
+
+d 1
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0111Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.147981 0.145991 0.152005 
+
+d 1
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0071Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.00102419 0.00102419 0.00102419 
+
+d 0.0509804
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0131Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.00102419 0.00102419 0.00102419 
+
+d 0.501961
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0121Mtl
+Material Color
+Ka 0.940601 0.940601 0.940601
+Kd 0.940601 0.940601 0.940601
+Ks 0.372552 0.372552 0.372552 
+
+d 1
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0081Mtl
+Material Color
+Ka 1 0 0
+Kd 1 0 0
+Ks 0.0901961 0 0 
+
+d 0.752941
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0061Mtl
+Material Color
+Ka 0.124741 0.113921 0.121986
+Kd 0.124741 0.113921 0.121986
+Ks 0.0494072 0.0451216 0.0483159 
+
+d 1
+
+Ns 0
+
+newmtl MeshesteslaModel3capot0021Mtl
+Material Color
+Ka 0.353741 0.363604 0.420508
+Kd 0.353741 0.363604 0.420508
+Ks 0.235827 0.242403 0.280339 
+
+d 1
+
+Ns 255
+
+map_Ka MeshesteslaModel3capot0021_diff.png
+map_Kd MeshesteslaModel3capot0021_diff.png
+map_d MeshesteslaModel3capot0021_diff.png
+
+map_Bump MeshesteslaModel3capot0021_nmap.png
+
+map_Ns MeshesteslaModel3capot0021_spec.png
+
+newmtl Wheelplastic20031Mtl
+Material Color
+Ka 0.940601 0.940601 0.940601
+Kd 0.940601 0.940601 0.940601
+Ks 0.0811499 0.0811499 0.0811499 
+
+d 1
+
+Ns 0
+
+map_Ns Wheelplastic20031_spec.png
+
+newmtl Wheelplastic120031Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ns Wheelplastic120031_spec.png
+
+newmtl Wheelchrome001wheelchrome0041Mtl
+Material Color
+Ka 0.940601 0.940601 0.940601
+Kd 0.940601 0.940601 0.940601
+Ks 0.0811499 0.0811499 0.0811499 
+
+d 1
+
+Ns 0
+
+map_Ns Wheelplastic120031_spec.png
+
+newmtl Tire1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Tire1_diff.png
+map_Kd Tire1_diff.png
+map_d Tire1_diff.png
+
+map_Bump Tire1_nmap.png
+
+map_Ns Tire1_spec.png
+
+newmtl InteriorCap1Mtl
+Material Color
+Ka 0.193972 0.193972 0.193972
+Kd 0.193972 0.193972 0.193972
+Ks 0.0167349 0.0167349 0.0167349 
+
+d 1
+
+Ns 0
+
+map_Ns Lugs1_spec.png
+
+newmtl Cap1Mtl
+Material Color
+Ka 0.2468 0.2468 0.2468
+Kd 0.2468 0.2468 0.2468
+Ks 0.0212926 0.0212926 0.0212926 
+
+d 1
+
+Ns 0
+
+map_Ns Lugs1_spec.png
+
