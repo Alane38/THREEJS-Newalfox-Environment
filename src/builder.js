@@ -39,7 +39,7 @@ const text = new Text()
  * Add to scene the Objects
  */
 
-scene.add(cube.setMeshPositions(0, 0, 0))
+scene.add(cube.setMeshPosRot(0, 0, 0, 0, Math.PI, 0))
 scene.add(platform.setMeshPositions(0, -0.5, 2))
 text
   .init(cube.getMeshPositionX(), cube.getMeshPositionY() + 1, cube.getMeshPositionZ())
@@ -76,8 +76,11 @@ loaderMTL.load(
       './objects/OBJObjects/Car-Model-3-Tesla-Roblox/Car-Roblox-Tesla-Model-3.obj',
       function (obj) {
         // obj.scale.set(10, 10, 10)
-        obj.position.set(text.mesh.position.x, text.mesh.position.y + 2, text.mesh.position.z)
+        obj.position.set(10, -2, 5)
+        obj.rotation.y = -135
 
+
+        
         scene.add(obj)
       },
       undefined,
@@ -178,7 +181,6 @@ document.body.addEventListener('keyup', function (e) {
   const key = e.code.replace('Key', '').toLowerCase()
   if (keys[key] !== undefined) keys[key] = false
 })
-
 
 /**
  * Animate
@@ -294,7 +296,6 @@ window.addEventListener('click', (e) => {
     }
   })
 })
-
 
 /**
  * Resize Window

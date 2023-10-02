@@ -16,6 +16,42 @@ export class Cube {
     this.mesh.name = "Cube"
   }
 
+  setMeshPosRot(x, y, z, xdeg, ydeg, zdeg) {
+    //x,y,z = Positions - xdeg, ydeg, zdeg = Rotations (deg)
+
+    //Positions
+    if (!x) {
+      x = this.mesh.position.x
+    }
+
+    if (!y) {
+      y = this.mesh.position.y
+    }
+
+    if (!z) {
+      z = this.mesh.position.z
+    }
+
+    this.mesh.position.set(x, y, z)
+
+    //Rotations
+    if (!xdeg) {
+      xdeg = this.mesh.rotation.x
+    }
+
+    if (!ydeg) {
+      ydeg = this.mesh.rotation.y
+    }
+
+    if (!zdeg) {
+      zdeg = this.mesh.rotation.z
+    }
+
+    this.mesh.rotation.set(xdeg, ydeg, zdeg)
+
+    return this.mesh
+  }
+
   setMeshPositions(x, y, z) {
     if (!x) {
       x = this.mesh.position.x
