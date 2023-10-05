@@ -15,8 +15,8 @@ export class Text {
     this.mesh = null
   }
 
-  async init(x, y, z) {
-    const font = await this.loadFont('./fonts/helvetiker_bold.typeface.json')
+  async init(objectName, x, y, z) {
+    const font = await this.loadFont('/fonts/helvetiker_bold.typeface.json')
     this.geometry = new TextGeometry('NEWALFOX', {
       font: font,
       size: 0.5,
@@ -29,6 +29,9 @@ export class Text {
     this.mesh.geometry.computeBoundingBox()
     this.mesh.geometry.boundingBox.getCenter(new THREE.Vector3())
     this.mesh.geometry.center()
+    
+    //Name the object
+    this.mesh.name = objectName
 
     this.setMeshPositions(x, y, z)
 

@@ -15,10 +15,11 @@ export class Platform {
     this.material = new THREE.MeshBasicMaterial({
       color: '#E2E2E2',
       opacity: 0.1,
-      transparent: true
+      transparent: false
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
-    this.mesh.rotation.x = -1.57 // -Math.PI / 2
+    this.mesh.rotation.x = -Math.PI / 2// -Math.PI / 2
+    this.mesh.name = "Platform"
   }
 
   setMeshPositions(x, y, z) {

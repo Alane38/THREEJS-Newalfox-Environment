@@ -5,15 +5,20 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 
-// Objects imports
-import { Cube } from './objects/cube'
-import { Platform } from './objects/platform'
-import { Text } from './objects/text'
+// Lightning importations
+import { Sky } from './objects/sky'
+
+// Objects importations
+import { Cube } from '/objects/cube'
+import { Platform } from '/objects/platform'
+import { Text } from '/objects/text'
+import { Car } from '/objects/OBJObjects/car'
 
 /**
  * Base
  */
-THREE.Cache.enabled = true
+// Reload cache
+// THREE.Cache.enabled = true
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -24,25 +29,36 @@ let initialWindowHeight = window.innerHeight
 const scene = new THREE.Scene()
 
 /**
+ * Renderer
+ */
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  antialias: true
+})
+renderer.setSize(window.innerWidth, window.innerHeight)
+// renderer.shadowMap.enabled = true
+
+/**
  * Init Class Objects
  */
-// "./objects/..."
-const loaderGLTFL = new GLTFLoader()
-const loaderOBJ = new OBJLoader()
-const loaderMTL = new MTLLoader()
+const scifiObject = new GLTFLoader()
 const cube = new Cube()
 const platform = new Platform()
 const text = new Text()
-// const text2 = new Text();
+const car = new Car()
 
 /**
  * Add to scene the Objects
  */
-
-scene.add(cube.setMeshPosRot(0, 0, 0, 0, Math.PI, 0))
+// Platform Object
 scene.add(platform.setMeshPositions(0, -0.5, 2))
+
+// Cube Object
+scene.add(cube.setMeshPosRot(0, 0, 0, 0, Math.PI, 0))
+
+// Newalfox Text Object
 text
-  .init(cube.getMeshPositionX(), cube.getMeshPositionY() + 1, cube.getMeshPositionZ())
+  .init('Newalfox-Text', cube.getMeshPositionX(), cube.getMeshPositionY() + 1, cube.getMeshPositionZ())
   .then((textMesh) => {
     // The font has been loaded successfully
     console.log('The font has been loaded successfully')
@@ -53,7 +69,7 @@ text
   })
 
 // Sci-Fi Object
-loaderGLTFL.load(
+scifiObject.load(
   './objects/GLTFObjects/SciFi-Cube/scene.gltf',
   function (gltf) {
     gltf.scene.scale.set(10, 10, 10)
@@ -68,55 +84,32 @@ loaderGLTFL.load(
 )
 
 // Car Object
-loaderMTL.load(
-  './objects/OBJObjects/Car-Model-3-Tesla-Roblox/Car-Roblox-Tesla-Model-3.mtl',
-  function (materials) {
-    loaderOBJ.setMaterials(materials)
-    loaderOBJ.load(
-      './objects/OBJObjects/Car-Model-3-Tesla-Roblox/Car-Roblox-Tesla-Model-3.obj',
-      function (obj) {
-        // obj.scale.set(10, 10, 10)
-        obj.position.set(10, -2, 5)
-        obj.rotation.y = -135
-
-
-        
-        scene.add(obj)
-      },
-      undefined,
-      function (error) {
-        console.error(error)
-      }
-    )
-  },
-  undefined,
-  function (error) {
-    console.error(error)
-  }
-)
-
-// loader.load( './objects/GLTFObjects/SciFi-Cube/scene.gltf', function ( gltf ) {
-
-// 	scene.add( gltf.scene );
-
-// }, undefined, function ( error ) {
-
-// 	console.error( error );
-
-// } );
+car
+  .init('Car', 10, -2, 5, null, -135, null)
+  .then((carObject) => {
+    console.log('The car was loaded successfully')
+    scene.add(carObject)
+  })
+  .catch((error) => {
+    console.error('An error was detected to load the car', error)
+  })
 
 /**
  * Lightning
  */
-scene.background = new THREE.Color('#000000')
-scene.fog = new THREE.Fog('#FF0000', 250, 1400)
+// scene.background = new THREE.Color('#000000')
+// scene.fog = new THREE.Fog('#FF0000', 250, 1400)
 
 const ambientLight = new THREE.AmbientLight('#db901f', 0.4)
 const dirLight = new THREE.DirectionalLight('white', 0.8)
+const sky = new Sky()
+
+// Helpers
 // const gridHelper = new THREE.GridHelper(40, 40)
 
 // scene.add(gridHelper)
 // scene.add(new THREE.AxesHelper())
+scene.add(sky)
 scene.add(dirLight)
 scene.add(ambientLight)
 
@@ -136,16 +129,6 @@ const controls = new OrbitControls(camera, canvas)
 
 // controls.enabled = false
 controls.enableDamping = true
-
-/**
- * Renderer
- */
-const renderer = new THREE.WebGLRenderer({
-  canvas: canvas,
-  antialias: true
-})
-renderer.setSize(window.innerWidth, window.innerHeight)
-// renderer.shadowMap.enabled = true
 
 /**
  * FLUIDITY CONTROL CAMERA/OBJECT - https://codepen.io/Fyrestar/pen/oNxERMr
@@ -185,12 +168,12 @@ document.body.addEventListener('keyup', function (e) {
 /**
  * Animate
  */
-const clock = new THREE.Clock()
+// const clock = new THREE.Clock()
 const tick = () => {
-  window.requestAnimationFrame(tick)
+  // Clock system
   // const elapsedTime = clock.getElapsedTime()
 
-  // Animate
+  // Animate cube
   //   cube.setMeshRotations(
   //     cube.mesh.rotation.x,
   //     (cube.mesh.rotation.y += elapsedTime),
@@ -225,15 +208,11 @@ const tick = () => {
   temp.setFromMatrixPosition(follow.matrixWorld)
 
   // Camera
-  // camera.rotateY(cube.mesh.rotation.y)
-  // camera.rotateY(cube.mesh.rotation.y)
-  // camera.position.z = cube.mesh.position.z - 0.2
-  // camera.position.y = cube.mesh.position.y + 0.8
   camera.lookAt(cube.mesh.position)
 
   // Custom
-  // text.setMeshPositions(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
-  // text.setMeshRotations(cube.mesh.rotation.x, cube.mesh.rotation.y, cube.mesh.rotation.z)
+  text.setMeshPositions(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
+  text.setMeshRotations(cube.mesh.rotation.x, cube.mesh.rotation.y, cube.mesh.rotation.z)
 
   // cube.material.color.setRGB(
   //   Math.random(255),
@@ -248,6 +227,7 @@ const tick = () => {
   renderer.render(scene, camera)
 
   // Call tick again on the next frame
+  window.requestAnimationFrame(tick)
 }
 
 tick()
@@ -289,16 +269,51 @@ window.addEventListener('pointermove', (e) => {
 
 window.addEventListener('click', (e) => {
   intersects.forEach((hit) => {
-    // if (hovered[hit.object.uuid]) {
-    // Call onClick
-    if (hit.object.name == 'Cube') {
-      // console.log(hit.object.material.color.setRGB(Math.random(255), Math.random(255), Math.random(255)))
+    let objects3DImportedList = [
+      {
+        name: 'Car',
+        pathFolder: '/objects/OBJObjects/Car-Model-3-Tesla-Roblox/'
+      }
+    ]
+
+    const verifyNameObjectClickIsOnFolder = () => {
+      // console.log(hit.object)
+      const hitObjectName = hit.object.name
+
+      objects3DImportedList.forEach((objectName) => {
+        console.log(getMaterialsOnMTL(objectName.pathFolder))
+        // getMaterialsOnMTL(objectName.pathFolder)
+        //   .then((materialsArray) => {
+        //     console.log(materialsArray)
+        // getMaterialsOnMTL(objectName.pathFolder).forEach((materialName) => {
+        //   if (hitObjectName == materialName) {
+        //     console.log(objectName.name)
+        //   }
+        // })
+
+        console.log(getMaterialsOnMTL(objectName.pathFolder))
+        // })
+        // .catch((error) => {
+        //   console.error('An error was detected to search materials on MTL file', error)
+        // })
+      })
     }
+
+    verifyNameObjectClickIsOnFolder()
+
+    // Call onClick
+    // console.log(hit)
+    // console.log(hit.object.name)
+    // if (hit.object.name == 'Cube') {
+    //   console.log(hit.object.material.color.setRGB(Math.random(255), Math.random(255), Math.random(255)))
+    // } else if (hit.object.name == 'Car') {
+    //   car.clicked()
+    // }
   })
 })
 
 /**
- * Resize Window
+ * Resize Window canvas
  */
 function onWindowResize(justAdjustWidth) {
   const height = justAdjustWidth ? initialWindowHeight : window.innerHeight
@@ -312,3 +327,26 @@ function onWindowResize(justAdjustWidth) {
 
 // When window resizes,its call the function!
 window.onresize = () => onWindowResize()
+
+/**
+ * FUNCTIONS
+ */
+// Get materials on MTL
+async function getMaterialsOnMTL(url) {
+  const res = await fetch(url)
+  const texte = await res.text()
+  const materialsNames = []
+
+  const lines = texte.split('\n')
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim()
+
+    if (line.startsWith('newmtl ')) {
+      const name = line.substring(7)
+      materialsNames.push(name)
+    }
+  }
+
+  return materialsNames
+}
