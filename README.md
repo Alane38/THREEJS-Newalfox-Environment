@@ -1,4 +1,4 @@
-# THREEJS-Newalfox-Environment-Portoflio
+# THREEJS-Newalfox-Environment-Portfolio
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
