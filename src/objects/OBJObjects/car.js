@@ -24,7 +24,11 @@ export class Car {
     // Load object
     this.object = await this.loadOBJ('/objects/OBJObjects/Car-Model-3-Tesla-Roblox/Car-Roblox-Tesla-Model-3.obj')
 
-    //Name the object
+    // Define options for the object
+    // this.object.castShadow = true
+    // this.object.receiveShadow = true
+
+    // Name the object
     this.object.name = objectName
 
     this.setObjectPosRot(x, y, z, xdeg, ydeg, zdeg)
@@ -37,6 +41,7 @@ export class Car {
       this.loaderMTL.load(
         url,
         (materials) => {
+          // console.log(typeof materials)
           resolve(materials)
         },
         undefined,
@@ -50,6 +55,7 @@ export class Car {
       this.loaderOBJ.load(
         url,
         (obj) => {
+          // console.log(typeof obj);
           resolve(obj)
         },
         undefined,
@@ -155,6 +161,14 @@ export class Car {
   //   this.material.color.set('orange')
   //   this.material.color.convertSRGBToLinear()
   // }
+
+  getChildrens() {
+    this.object.traverse(function (child) {
+      // do something with child
+      console.log(child)
+      return child
+    })
+  }
 
   clicked(e) {
     console.log('testt', e)

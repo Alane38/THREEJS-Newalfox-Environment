@@ -1,9 +1,16 @@
 import * as THREE from 'three'
+
+// Statistics (FPS, params ...)
+import Stats from 'three/addons/libs/stats.module.js'
+
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
+
+// Custom functions importations
+import { GetMaterialsOnMTLFile } from '/functions'
 
 // Lightning importations
 import { Sky } from './objects/sky'
@@ -13,6 +20,7 @@ import { Cube } from '/objects/cube'
 import { Platform } from '/objects/platform'
 import { Text } from '/objects/text'
 import { Car } from '/objects/OBJObjects/car'
+import { City } from './objects/OBJObjects/city'
 
 /**
  * Base
@@ -35,8 +43,13 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true
 })
+renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize(window.innerWidth, window.innerHeight)
 // renderer.shadowMap.enabled = true
+
+const stats = new Stats()
+const container = document.getElementById( 'container' );
+container.appendChild(stats.dom)
 
 /**
  * Init Class Objects
@@ -46,6 +59,7 @@ const cube = new Cube()
 const platform = new Platform()
 const text = new Text()
 const car = new Car()
+const city = new City()
 
 /**
  * Add to scene the Objects
@@ -94,6 +108,15 @@ car
     console.error('An error was detected to load the car', error)
   })
 
+// city.init('City', 10, -4, 5, null, null, null)
+// .then((carObject) => {
+//   console.log('The car was loaded successfully')
+//   scene.add(carObject)
+// })
+// .catch((error) => {
+//   console.error('An error was detected to load the car', error)
+// })
+
 /**
  * Lightning
  */
@@ -117,7 +140,7 @@ scene.add(ambientLight)
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
 // camera.position.x = cube.mesh.position.x + 2
 camera.position.z = 3
 camera.position.y = 0.9
@@ -128,25 +151,26 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 
 // controls.enabled = false
+// controls.enableDamping = true
 controls.enableDamping = true
+controls.dampingFactor = 0.05
+controls.rotateSpeed = 0.5
+controls.zoomSpeed = 1.0
+controls.panSpeed = 1.0
 
 /**
  * FLUIDITY CONTROL CAMERA/OBJECT - https://codepen.io/Fyrestar/pen/oNxERMr
  */
-let goal, keys, follow
+let goal, keys
 
-let temp = new THREE.Vector3()
 let dir = new THREE.Vector3()
 let a = new THREE.Vector3()
 let b = new THREE.Vector3()
-let coronaSafetyDistance = 0.3
+let coronaSafetyDistance = 0.9
 let velocity = 0.0
 let speed = 0.0
 
 goal = new THREE.Object3D()
-follow = new THREE.Object3D()
-
-cube.mesh.add(follow)
 goal.add(camera)
 
 keys = {
@@ -173,13 +197,6 @@ const tick = () => {
   // Clock system
   // const elapsedTime = clock.getElapsedTime()
 
-  // Animate cube
-  //   cube.setMeshRotations(
-  //     cube.mesh.rotation.x,
-  //     (cube.mesh.rotation.y += elapsedTime),
-  //     cube.mesh.rotation.z
-  //   );
-
   // Fluidity - Controls - https://codepen.io/Fyrestar/pen/oNxERMr
   speed = 0.0
 
@@ -204,8 +221,6 @@ const tick = () => {
   dir.copy(a).sub(b).normalize()
   const dis = a.distanceTo(b) - coronaSafetyDistance
   goal.position.addScaledVector(dir, dis)
-  goal.position.lerp(temp, 0.02)
-  temp.setFromMatrixPosition(follow.matrixWorld)
 
   // Camera
   camera.lookAt(cube.mesh.position)
@@ -222,6 +237,9 @@ const tick = () => {
 
   // Update controls mouse
   controls.update()
+
+  // Update statistics FPS
+  stats.update();
 
   // Render
   renderer.render(scene, camera)
@@ -262,7 +280,7 @@ window.addEventListener('pointermove', (e) => {
     // If a hit has not been flagged as hovered we must call onPointerOver
     // Call onPointerMove
     if (hit.object.material.color) {
-      // hit.object.material.codlor.setRGB(Math.random(255), Math.random(255), Math.random(255))
+      // hit.object.material.color.setRGB(Math.random(255), Math.random(255), Math.random(255))
     }
   })
 })
@@ -272,43 +290,29 @@ window.addEventListener('click', (e) => {
     let objects3DImportedList = [
       {
         name: 'Car',
-        pathFolder: '/objects/OBJObjects/Car-Model-3-Tesla-Roblox/'
+        mtlPath: '/objects/OBJObjects/Car-Model-3-Tesla-Roblox/Car-Roblox-Tesla-Model-3.mtl'
       }
     ]
 
     const verifyNameObjectClickIsOnFolder = () => {
-      // console.log(hit.object)
       const hitObjectName = hit.object.name
 
-      objects3DImportedList.forEach((objectName) => {
-        console.log(getMaterialsOnMTL(objectName.pathFolder))
-        // getMaterialsOnMTL(objectName.pathFolder)
-        //   .then((materialsArray) => {
-        //     console.log(materialsArray)
-        // getMaterialsOnMTL(objectName.pathFolder).forEach((materialName) => {
-        //   if (hitObjectName == materialName) {
-        //     console.log(objectName.name)
-        //   }
-        // })
+      objects3DImportedList.forEach(async (objectName) => {
+        const materialsList = await GetMaterialsOnMTLFile(objectName.mtlPath)
 
-        console.log(getMaterialsOnMTL(objectName.pathFolder))
-        // })
-        // .catch((error) => {
-        //   console.error('An error was detected to search materials on MTL file', error)
-        // })
+        materialsList.forEach((materialName) => {
+          if (hitObjectName == materialName) {
+            console.log(objectName.name)
+            // } else {
+            //   console.log(hitObjectName)
+          }
+        })
       })
     }
 
     verifyNameObjectClickIsOnFolder()
 
-    // Call onClick
-    // console.log(hit)
-    // console.log(hit.object.name)
-    // if (hit.object.name == 'Cube') {
-    //   console.log(hit.object.material.color.setRGB(Math.random(255), Math.random(255), Math.random(255)))
-    // } else if (hit.object.name == 'Car') {
-    //   car.clicked()
-    // }
+    console.log(hit)
   })
 })
 
@@ -327,26 +331,3 @@ function onWindowResize(justAdjustWidth) {
 
 // When window resizes,its call the function!
 window.onresize = () => onWindowResize()
-
-/**
- * FUNCTIONS
- */
-// Get materials on MTL
-async function getMaterialsOnMTL(url) {
-  const res = await fetch(url)
-  const texte = await res.text()
-  const materialsNames = []
-
-  const lines = texte.split('\n')
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim()
-
-    if (line.startsWith('newmtl ')) {
-      const name = line.substring(7)
-      materialsNames.push(name)
-    }
-  }
-
-  return materialsNames
-}
