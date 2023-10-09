@@ -55,6 +55,7 @@ container.appendChild(stats.dom)
  * Init Class Objects
  */
 const scifiObject = new GLTFLoader()
+const signMenu = new GLTFLoader()
 const cube = new Cube()
 const platform = new Platform()
 const text = new Text()
@@ -88,6 +89,22 @@ scifiObject.load(
   function (gltf) {
     gltf.scene.scale.set(10, 10, 10)
     gltf.scene.position.set(text.mesh.position.x, text.mesh.position.y + 2, text.mesh.position.z)
+
+    scene.add(gltf.scene)
+  },
+  undefined,
+  function (error) {
+    console.error(error)
+  }
+)
+
+// SignMenu Object
+signMenu.load(
+  './objects/GLTFObjects/signMenu/chalkboard_sign_v1.glb',
+  function (gltf) {
+    gltf.scene.scale.set(0.03, 0.03, 0.03)
+    gltf.scene.position.set(-2, platform.getMeshPositionY(), -10)
+    gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
 
     scene.add(gltf.scene)
   },

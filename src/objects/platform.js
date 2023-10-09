@@ -73,4 +73,8 @@ export class Platform {
   getMeshPositions() {
     return this.mesh.position
   }
+
+  getMeshRotationX() {
+    return this.mesh.rotation.x
+  }
 }
