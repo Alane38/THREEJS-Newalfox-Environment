@@ -103,7 +103,7 @@ signMenu.load(
   './objects/GLTFObjects/signMenu/chalkboard_sign_v1.glb',
   function (gltf) {
     gltf.scene.scale.set(0.03, 0.03, 0.03)
-    gltf.scene.position.set(-2, platform.getMeshPositionY(), -10)
+    gltf.scene.position.set(-2, platform.getMeshPositionY(), -5)
     gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
 
     scene.add(gltf.scene)
@@ -240,7 +240,7 @@ const tick = () => {
   goal.position.addScaledVector(dir, dis)
 
   // Camera
-  camera.lookAt(cube.mesh.position)
+  // camera.lookAt(cube.mesh.position)
 
   // Custom
   text.setMeshPositions(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
