@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 // Statistics (FPS, params ...)
-import Stats from 'three/addons/libs/stats.module.js'
+import Stats from '/customModules/stats.module.js'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
@@ -47,8 +47,11 @@ renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize(window.innerWidth, window.innerHeight)
 // renderer.shadowMap.enabled = true
 
+/**
+ * FPS statistics
+ */
 const stats = new Stats()
-const container = document.getElementById( 'container' );
+const container = document.getElementById( 'fpsViewer' );
 container.appendChild(stats.dom)
 
 /**
@@ -240,7 +243,7 @@ const tick = () => {
   goal.position.addScaledVector(dir, dis)
 
   // Camera
-  // camera.lookAt(cube.mesh.position)
+  camera.lookAt(cube.mesh.position)
 
   // Custom
   text.setMeshPositions(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)

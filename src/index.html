@@ -3,28 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>08 - Fullscreen and resizing</title>
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./ui/customCursor/style.scss" />
+    <title>Newalfox- Interactive Portfolio</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./ui/customCursor/cursorStyle.scss" />
+    <link rel="stylesheet" href="./ui/customProgressWorldBar/progressStyle.css" />
+    <link rel="stylesheet" href="./style.css" /> 
+    <style>
+      /* :root {
+        --bg-progressWorld: #2e2e2e;
+        --bg-progress-now: #db901f;
+      }
+
+      #progressWorld {
+        position: fixed;
+        z-index: 10000;
+        height: 100%;
+        width: 200px;
+        right: -80px;
+        transform: rotate(180deg);
+        background: linear-gradient(to top, var(--bg-progressWorld) 99.9%, transparent 99.9%), radial-gradient(circle at 50% 50%, var(--bg-progressWorld) 25%, transparent 30%);
+        background-position: 50% 0%, 50% 15px;
+        background-size: 5px 100%, 50px 50px;
+        background-repeat: no-repeat, repeat-y;
+      }
+      #progress-now {
+        position: fixed;
+        width: 200px;
+        background: linear-gradient(to top, var(--bg-progress-now) 99.9%, transparent 99.9%), radial-gradient(circle at 50% 50%, var(--bg-progress-now) 25%, transparent 30%);
+        background-position: 50% 0%, 50% 15px;
+        background-size: 5px 100%, 50px 50px;
+        background-repeat: no-repeat, repeat-y;
+        z-index: 1;
+      } */
+    </style>
   </head>
   <body>
-    <div id="container"></div>
-    <canvas class="webgl"></canvas>
-    <script type="module" src="./builder.js"></script>
+    <div id="fpsViewer"></div>
+
+    <!-- <div id="progressWorld">
+      <div id="progress-now" value="1.85">
+        <div class="step1"></div>
+        <div class="step2"></div>
+        <div class="step3"></div>
+        <div class="step4"></div>
+        <div class="step5"></div>
+        <div class="step6"></div>
+        <div class="step7"></div>
+      </div>
+    </div> -->
+
+    <button onClick="next()">Next Step</button>
+
+    <!-- <canvas class="webgl"></canvas> -->
+
+    <div class="container-fluid">
+      <ul class="list-unstyled multi-steps">
+        <li id="step-1" class="is-active">
+          <span>Start</span>
+          <div class="progress-bar progress-bar--success">
+            <div class="progress-bar__bar"></div>
+          </div>
+        </li>
+        <li id="step-2">
+          First Step
+          <div class="progress-bar progress-bar--success">
+            <div class="progress-bar__bar"></div>
+          </div>
+        </li>
+        <li id="step-3">
+          Middle Stage
+          <div class="progress-bar progress-bar--success">
+            <div class="progress-bar__bar"></div>
+          </div>
+        </li>
+        <li id="step-4">Finish</li>
+      </ul>
+    </div>
+    
     <div class="cursor">
       <div class="cursor__ball cursor__ball--big">
         <svg height="30" width="30">
           <circle cx="15" cy="15" r="12" stroke-width="0"></circle>
         </svg>
       </div>
-
+      
       <div class="cursor__ball cursor__ball--small">
         <svg height="10" width="10">
           <circle cx="5" cy="5" r="4" stroke-width="0"></circle>
         </svg>
       </div>
     </div>
+
+    <!-- <script type="module" src="./builder.js"></script> -->
+    <script src="./ui/customProgressWorldBar/progressBar.js"></script>
     <script src="./ui/customCursor/cursor.js"></script>
+    
+    <!-- <script>
+      window.onload = function () {
+        let progress = 0
+
+        setInterval(() => {
+          progress += 1
+          document.getElementById('progress-now').setAttribute('style', 'height: ' + progress + 'px')
+        }, 10)
+      }
+      </script> -->
   </body>
 </html>
