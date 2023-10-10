@@ -12,6 +12,11 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 // Custom functions importations
 import { GetMaterialsOnMTLFile } from '/functions'
 
+// Custom progressWorldBar function
+import { setProgressWorldStep } from '/ui/customProgressWorldBar/progressBar.js'
+
+setProgressWorldStep(3)
+
 // Lightning importations
 import { Sky } from './objects/sky'
 
@@ -20,7 +25,7 @@ import { Cube } from '/objects/cube'
 import { Platform } from '/objects/platform'
 import { Text } from '/objects/text'
 import { Car } from '/objects/OBJObjects/car'
-import { City } from './objects/OBJObjects/city'
+import { City } from '/objects/OBJObjects/city'
 
 /**
  * Base
@@ -43,7 +48,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true
 })
-renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize(window.innerWidth, window.innerHeight)
 // renderer.shadowMap.enabled = true
 
@@ -51,7 +56,7 @@ renderer.setSize(window.innerWidth, window.innerHeight)
  * FPS statistics
  */
 const stats = new Stats()
-const container = document.getElementById( 'fpsViewer' );
+const container = document.getElementById('fpsViewer')
 container.appendChild(stats.dom)
 
 /**
@@ -259,7 +264,7 @@ const tick = () => {
   controls.update()
 
   // Update statistics FPS
-  stats.update();
+  stats.update()
 
   // Render
   renderer.render(scene, camera)

@@ -2,6 +2,7 @@ const bigBall = document.querySelector('.cursor__ball--big');
 const smallBall = document.querySelector('.cursor__ball--small');
 const hoverables = document.querySelectorAll('.hoverable');
 
+
 // Listeners
 document.body.addEventListener('mousemove', onMouseMove);
 for (let i = 0; i < hoverables.length; i++) {
