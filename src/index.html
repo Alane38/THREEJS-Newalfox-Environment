@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./ui/customCursor/cursorStyle.scss" />
     <link rel="stylesheet" href="./ui/customProgressWorldBar/progressStyle.css" />
-    <link rel="stylesheet" href="./style.css" /> 
+    <link rel="stylesheet" href="./style.css" />
     <style>
       /* :root {
         --bg-progressWorld: #2e2e2e;
@@ -53,13 +53,11 @@
       </div>
     </div> -->
 
-    <button onClick="next()">Next Step</button>
-
-    <!-- <canvas class="webgl"></canvas> -->
+    <canvas class="webgl"></canvas>
 
     <div class="container-fluid">
-      <ul class="list-unstyled multi-steps">
-        <li id="step-1" class="is-active">
+      <ul id="multi-step" class="list-unstyled multi-steps">
+        <li id="step-1" onclick="nextProgressWorldStep()" class="is-active">
           <div class="progress-title">
             <span>Compétences</span>
           </div>
@@ -67,7 +65,7 @@
             <div class="progress-bar__bar"></div>
           </div>
         </li>
-        <li id="step-2">
+        <li id="step-2" onclick="nextProgressWorldStep()">
           <div class="progress-title">
             <span>First Step</span>
           </div>
@@ -75,7 +73,7 @@
             <div class="progress-bar__bar"></div>
           </div>
         </li>
-        <li id="step-3">
+        <li id="step-3" onclick="nextProgressWorldStep()">
           <div class="progress-title">
             <span>Internships</span>
           </div>
@@ -83,21 +81,21 @@
             <div class="progress-bar__bar"></div>
           </div>
         </li>
-        <li id="step-4">
+        <li id="step-4" onclick="nextProgressWorldStep()">
           <div class="progress-title">
             <span>Arrivée</span>
           </div>
         </li>
       </ul>
     </div>
-    
+
     <div class="cursor">
       <div class="cursor__ball cursor__ball--big">
         <svg height="30" width="30">
           <circle cx="15" cy="15" r="12" stroke-width="0"></circle>
         </svg>
       </div>
-      
+
       <div class="cursor__ball cursor__ball--small">
         <svg height="10" width="10">
           <circle cx="5" cy="5" r="4" stroke-width="0"></circle>
@@ -108,7 +106,7 @@
     <!-- <script type="module" src="./builder.js"></script> -->
     <script src="./ui/customProgressWorldBar/progressBar.js"></script>
     <script src="./ui/customCursor/cursor.js"></script>
-    
+
     <!-- <script>
       window.onload = function () {
         let progress = 0

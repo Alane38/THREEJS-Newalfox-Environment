@@ -162,8 +162,8 @@ scene.add(ambientLight)
 // Base camera
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
 // camera.position.x = cube.mesh.position.x + 2
-camera.position.z = 3
-camera.position.y = 0.9
+camera.position.z = 5
+camera.position.y = 2
 // camera.lookAt( scene.position );
 scene.add(camera)
 

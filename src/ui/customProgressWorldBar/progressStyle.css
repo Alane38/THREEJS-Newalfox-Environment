@@ -1,6 +1,9 @@
 :root {
-  --brand-primary: #2e2e2e;
-  --grey-light: #db901f;
+  --brand-primary: #db901f;
+  --grey-light: #2E2E2E;
+
+  --box-shadow-0percent: #b6781b19;
+  --box-shadow-100percent: #857e7521;
 }
 
 /* Styles for .remain-steps class */
@@ -32,6 +35,10 @@
   margin-bottom: 20px;
 }
 
+.multi-steps > li:hover {
+  cursor: pointer;
+}
+
 .multi-steps > li:before {
   content: '✓';
   display: block;
@@ -57,7 +64,7 @@
   background-color: white;
   border-color: var(--brand-primary);
   color: var(--brand-primary);
-  animation: pulse 2s infinite;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .multi-steps > li.is-active ~ li {
@@ -89,10 +96,10 @@
 /* Keyframes for pulse animation */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(2, 127, 0, 0.44);
+    box-shadow: 0 0 0 0 var(--box-shadow-0percent);
   }
   100% {
-    box-shadow: 0 0 0 10px rgba(2, 127, 0, 0);
+    box-shadow: 0 0 0 10px var(--box-shadow-100percent);
   }
 }
 
