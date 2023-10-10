@@ -13,9 +13,7 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 import { GetMaterialsOnMTLFile } from '/functions'
 
 // Custom progressWorldBar function
-import { setProgressWorldStep } from '/ui/customProgressWorldBar/progressBar.js'
-
-setProgressWorldStep(3)
+import { setProgressWorldStep, getMaxStep, resetProgressWorldStep } from '/ui/customProgressWorldBar/progressBar.js'
 
 // Lightning importations
 import { Sky } from './objects/sky'
@@ -54,7 +52,7 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 
 /**
  * FPS statistics
- */
+*/
 const stats = new Stats()
 const container = document.getElementById('fpsViewer')
 container.appendChild(stats.dom)
@@ -111,7 +109,7 @@ signMenu.load(
   './objects/GLTFObjects/signMenu/chalkboard_sign_v1.glb',
   function (gltf) {
     gltf.scene.scale.set(0.03, 0.03, 0.03)
-    gltf.scene.position.set(-2, platform.getMeshPositionY(), -5)
+    gltf.scene.position.set(-2, platform.getMeshPositionY(), 5)
     gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
 
     scene.add(gltf.scene)
@@ -167,7 +165,7 @@ scene.add(ambientLight)
 // Base camera
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
 // camera.position.x = cube.mesh.position.x + 2
-camera.position.z = 5
+camera.position.z = -5
 camera.position.y = 2
 // camera.lookAt( scene.position );
 scene.add(camera)
@@ -226,9 +224,9 @@ const tick = () => {
   speed = 0.0
 
   if (keys.w) {
-    speed = 0.1
-  } else if (keys.s) {
     speed = -0.1
+  } else if (keys.s) {
+    speed = 0.1
   }
 
   velocity += (speed - velocity) * 0.3
@@ -259,6 +257,20 @@ const tick = () => {
   //   Math.random(255),
   //   Math.random(255)
   // );
+
+  // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the cube position Z on the platform
+  let platformDividedSteps = platform.getPlatformGeometryHeight() / getMaxStep()
+  let cubeZPosition = cube.getMeshPositionZ()
+  if (platformDividedSteps / 1000 >= cubeZPosition) {
+    setProgressWorldStep(1)
+  } else if (platformDividedSteps / 1000 + 100 >= cubeZPosition && cubeZPosition < platformDividedSteps / 1000 + 100) {
+    setProgressWorldStep(2)
+  } else {
+    resetProgressWorldStep()
+  }
+  // console.log(getMaxStep())
+  // console.log(platformDividedSteps / 1000)
+  // console.log(cubeZPosition)
 
   // Update controls mouse
   controls.update()

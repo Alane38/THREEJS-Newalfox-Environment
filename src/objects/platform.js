@@ -77,4 +77,8 @@ export class Platform {
   getMeshRotationX() {
     return this.mesh.rotation.x
   }
+
+  getPlatformGeometryHeight() {
+    return this.geometry.parameters.height
+  }
 }
