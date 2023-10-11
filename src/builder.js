@@ -13,7 +13,7 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 import { GetMaterialsOnMTLFile } from './functions'
 
 // Custom progressWorldBar function
-import { SetProgressWorldStep, GetMaxStep, ResetProgressWorldStep, GetStepDatasWithPlatformHeight, GetProgressWorldStep } from './ui/customProgressWorldBar/progressBar.js'
+import { SetProgressWorldStep, GetMaxStep, ResetProgressWorldStep, SetStepDatasWithPlatformHeight, GetProgressWorldStep } from './ui/customProgressWorldBar/progressBar.js'
 
 // Lightning importations
 import { Sky } from './objects/sky'
@@ -259,22 +259,23 @@ const tick = () => {
   // );
 
   // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the cube position Z on the platform
-  let platformDividedSteps = platform.getPlatformGeometryHeight() / GetMaxStep()
+  // let platformDividedSteps = platform.getPlatformGeometryHeight() / GetMaxStep()
   let cubePositionZ = cube.getMeshPositionZ()
   
   if (speed !== 0) {
-    console.log(cubePositionZ)
-    if (platformDividedSteps > 0) {
-      if (cubePositionZ <= (GetProgressWorldStep() + 1) && cubePositionZ > 0 && GetProgressWorldStep() + 1 < GetMaxStep() ) {
-        SetProgressWorldStep(GetProgressWorldStep() + 1)
-      }
-    } else if (platformDividedSteps < 0) {
-      if (cubePositionZ <= (GetProgressWorldStep() - 1) && cubePositionZ < 0 && GetProgressWorldStep() - 1 < GetMaxStep() ) {
-        SetProgressWorldStep(GetProgressWorldStep() - 1)
-      }
-    } else {
-      ResetProgressWorldStep()
-    }
+    // console.log(cubePositionZ)
+    // if (platformDividedSteps > 0) {
+    //   if (cubePositionZ <= (GetProgressWorldStep() + 1) && cubePositionZ > 0 && GetProgressWorldStep() + 1 < GetMaxStep() ) {
+    //     SetProgressWorldStep(GetProgressWorldStep() + 1)
+    //   }
+    // } else if (platformDividedSteps < 0) {
+    //   if (cubePositionZ <= (GetProgressWorldStep() - 1) && cubePositionZ < 0 && GetProgressWorldStep() - 1 < GetMaxStep() ) {
+    //     SetProgressWorldStep(GetProgressWorldStep() - 1)
+    //   }
+    // } else {
+    //   ResetProgressWorldStep()
+    // }
+    SetStepDatasWithPlatformHeight(GetMaxStep(), platform.getPlatformGeometryHeight(), cubePositionZ)
   }
 
   // console.log(getMaxStep())
