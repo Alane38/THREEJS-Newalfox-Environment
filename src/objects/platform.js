@@ -19,7 +19,6 @@ export class Platform {
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.rotation.x = -Math.PI / 2// -Math.PI / 2
-    this.mesh.position.y = -100
     this.mesh.name = "Platform"
   }
 

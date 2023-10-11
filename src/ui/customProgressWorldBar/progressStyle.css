@@ -6,6 +6,23 @@
   --box-shadow-100percent: #857e7521;
 }
 
+.nextStepButton {
+  background-color: var(--brand-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  right: 10px;
+  bottom: -15px;
+  transform: rotate(180deg);
+}
+
+.nextStepIcon {
+  fill: var(--grey-light);
+  font-size: x-large;
+  transform: rotate(90deg);
+}
+
 /* Styles for .remain-steps class */
 .remain-steps:before {
   content: counter(stepNum);
@@ -23,7 +40,7 @@
   align-items: center;
   position: fixed;
   right: 10px;
-  bottom: 3px;
+  bottom: 30px;
   transform: rotate(180deg);
 }
 

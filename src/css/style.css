@@ -1,0 +1,7 @@
+
+.webgl {
+  position: fixed; /* for no scrolling on page */
+  top: 0;
+  left: 0;
+  outline: none; /* for no scrolling on page */
+}
