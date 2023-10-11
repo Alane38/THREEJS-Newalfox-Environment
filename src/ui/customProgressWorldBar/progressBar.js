@@ -1,6 +1,6 @@
 const _DEBUG_ = false
 
-let countClick = 0
+let stepUsed = 0
 
 const multi_step = document.getElementById('multi-step')
 
@@ -26,7 +26,7 @@ Object.keys(multi_step.children).map((index) => {
     stepElement.setAttribute('value', index)
 
     stepElement.addEventListener('click', () => {
-      setProgressWorldStep(multi_step.children[index].getAttribute('value'))
+      SetProgressWorldStep(multi_step.children[index].getAttribute('value'))
     })
   }
 })
@@ -39,24 +39,23 @@ function nextProgressWorldStep() {
 
   let multi_step_childrensLength = multi_step.children.length - 1 // ex: 3
 
-  if (countClick === multi_step_childrensLength) {
+  if (stepUsed === multi_step_childrensLength) {
     if (_DEBUG_) {
       console.log('end')
     }
 
-    resetProgressWorldStep()
+    ResetProgressWorldStep()
     return
   }
 
-  countClick += 1
-
+  stepUsed += 1
 
   Object.keys(multi_step.children).map((index) => {
     let stepElement = multi_step.children[index] // html element
     let stepElementStepId = stepElement.getAttribute('id') // step-1
     let stepElementId = Number(stepElementStepId.substring(5)) // 1
 
-    if (index == countClick) {
+    if (index == stepUsed) {
       let actual_step_element = document.getElementById('step-' + stepElementId)
       let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
 
@@ -68,13 +67,13 @@ function nextProgressWorldStep() {
   })
 
   if (_DEBUG_) {
-    console.log(countClick)
+    console.log(stepUsed)
   }
 }
 
 // Reset to default steps
-function resetProgressWorldStep() {
-  countClick = 0
+function ResetProgressWorldStep() {
+  stepUsed = 0
 
   Object.keys(multi_step.children).map((index) => {
     let stepElement = multi_step.children[index] // html element
@@ -98,13 +97,13 @@ function resetProgressWorldStep() {
   }
 
   if (_DEBUG_) {
-    console.log(countClick)
+    console.log(stepUsed)
   }
 }
 
 // Set custom step
-function setProgressWorldStep(step) {
-  countClick = Number(step)
+function SetProgressWorldStep(step) {
+  stepUsed = Number(step)
 
   Object.keys(multi_step.children).map((index) => {
     let stepElement = multi_step.children[index] // html element
@@ -115,7 +114,7 @@ function setProgressWorldStep(step) {
     let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
 
     // TODO: A FIX ICI (Cliquer sur le dernier step pour voir l'erreur)
-    if (index <= countClick) {
+    if (index <= stepUsed) {
       actual_step_element.classList.remove('is-active')
       actual_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(100%)'
       actual_step_element.querySelector('.progress-bar__bar').style.webkitTransform = 'translateY(100%)'
@@ -127,13 +126,27 @@ function setProgressWorldStep(step) {
   })
 
   if (_DEBUG_) {
-    console.log(countClick)
+    console.log(stepUsed)
   }
 }
 
+// Get progress world step
+function GetProgressWorldStep() {
+  return stepUsed;
+}
+
 // Get the max step (length)
-function getMaxStep() {
+function GetMaxStep() {
   return multi_step.children.length
 }
 
-export { setProgressWorldStep, getMaxStep, resetProgressWorldStep }
+// Get step data for position cube/platform world
+function GetStepDatasWithPlatformHeight(maxStep, platformHeight) {
+  let stepDatas = []
+
+  for (let step = 1; step <= maxStep; step++) {
+    console.log(step)
+  }
+}
+
+export { SetProgressWorldStep, GetMaxStep, ResetProgressWorldStep, GetStepDatasWithPlatformHeight, GetProgressWorldStep }

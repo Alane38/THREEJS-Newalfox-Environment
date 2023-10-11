@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
 // Statistics (FPS, params ...)
-import Stats from '/customModules/stats.module.js'
+import Stats from './customModules/stats.module.js'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
@@ -10,20 +10,20 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 
 // Custom functions importations
-import { GetMaterialsOnMTLFile } from '/functions'
+import { GetMaterialsOnMTLFile } from './functions'
 
 // Custom progressWorldBar function
-import { setProgressWorldStep, getMaxStep, resetProgressWorldStep } from '/ui/customProgressWorldBar/progressBar.js'
+import { SetProgressWorldStep, GetMaxStep, ResetProgressWorldStep, GetStepDatasWithPlatformHeight, GetProgressWorldStep } from './ui/customProgressWorldBar/progressBar.js'
 
 // Lightning importations
 import { Sky } from './objects/sky'
 
 // Objects importations
-import { Cube } from '/objects/cube'
-import { Platform } from '/objects/platform'
-import { Text } from '/objects/text'
-import { Car } from '/objects/OBJObjects/car'
-import { City } from '/objects/OBJObjects/city'
+import { Cube } from './objects/cube'
+import { Platform } from './objects/platform'
+import { Text } from './objects/text'
+import { Car } from './objects/OBJObjects/car'
+import { City } from './objects/OBJObjects/city'
 
 /**
  * Base
@@ -259,18 +259,26 @@ const tick = () => {
   // );
 
   // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the cube position Z on the platform
-  let platformDividedSteps = platform.getPlatformGeometryHeight() / getMaxStep()
-  let cubeZPosition = cube.getMeshPositionZ()
-  if (platformDividedSteps / 1000 >= cubeZPosition) {
-    setProgressWorldStep(1)
-  } else if (platformDividedSteps / 1000 + 100 >= cubeZPosition && cubeZPosition < platformDividedSteps / 1000 + 100) {
-    setProgressWorldStep(2)
-  } else {
-    resetProgressWorldStep()
+  let platformDividedSteps = platform.getPlatformGeometryHeight() / GetMaxStep()
+  let cubePositionZ = cube.getMeshPositionZ()
+  
+  if (speed !== 0) {
+    console.log(cubePositionZ)
+    if (platformDividedSteps > 0) {
+      if (cubePositionZ <= (GetProgressWorldStep() + 1) && cubePositionZ > 0 && GetProgressWorldStep() + 1 < GetMaxStep() ) {
+        SetProgressWorldStep(GetProgressWorldStep() + 1)
+      }
+    } else if (platformDividedSteps < 0) {
+      if (cubePositionZ <= (GetProgressWorldStep() - 1) && cubePositionZ < 0 && GetProgressWorldStep() - 1 < GetMaxStep() ) {
+        SetProgressWorldStep(GetProgressWorldStep() - 1)
+      }
+    } else {
+      ResetProgressWorldStep()
+    }
   }
+
   // console.log(getMaxStep())
   // console.log(platformDividedSteps / 1000)
-  // console.log(cubeZPosition)
 
   // Update controls mouse
   controls.update()

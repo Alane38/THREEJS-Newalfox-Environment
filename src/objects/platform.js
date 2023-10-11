@@ -11,7 +11,7 @@ export class Platform {
 
   // Create default object
   constructor() {
-    this.geometry = new THREE.PlaneGeometry(3, 10000)
+    this.geometry = new THREE.PlaneGeometry(3, 10)
     this.material = new THREE.MeshBasicMaterial({
       color: '#E2E2E2',
       opacity: 0.1,
