@@ -13,15 +13,13 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 import { GetMaterialsOnMTLFile } from './functions'
 
 // Custom progressWorldBar function
-import { 
-  SetStepDatasWithCheckCubePosition
-} from './ui/customProgressWorldBar/progressBar.js'
+import { SetStepDatasWithCheckCubePosition } from './ui/customProgressWorldBar/progressBar.js'
 
 // Lightning importations
 import { Sky } from './objects/sky'
 
 // Objects importations
-import { Cube } from './objects/cube' 
+import { Cube } from './objects/cube'
 import { Platform } from './objects/platform'
 import { Text } from './objects/text'
 import { Car } from './objects/OBJObjects/car'
@@ -54,7 +52,7 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 
 /**
  * FPS statistics
-*/
+ */
 const stats = new Stats()
 const container = document.getElementById('fpsViewer')
 container.appendChild(stats.dom)
@@ -113,7 +111,6 @@ signMenu.load(
     gltf.scene.scale.set(0.03, 0.03, 0.03)
     gltf.scene.position.set(-2, platform.getMeshPositionY(), 5)
     gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
-    console.log('tete')
 
     scene.add(gltf.scene)
   },

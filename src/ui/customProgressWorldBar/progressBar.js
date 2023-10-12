@@ -103,6 +103,8 @@ function ResetProgressWorldStep() {
     console.log('reset')
   }
 
+  SetProgressWorldStep(stepUsed)
+
   if (_DEBUG_) {
     console.log(stepUsed)
   }
@@ -148,7 +150,7 @@ function SetProgressWorldStep(step) {
     let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
 
     // TODO: A FIX ICI (Cliquer sur le dernier step pour voir l'erreur)
-    if (index <= stepUsed && index) {
+    if (index <= stepUsed) {
       actual_step_element.classList.remove('is-active')
       if (actual_step_element.querySelector('.progress-bar__bar')) {
         actual_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(100%)'
@@ -162,9 +164,12 @@ function SetProgressWorldStep(step) {
   })
 
   // Set positionZ of cube on the world
-  const cubePositionZ = getCubePositionZDistanceStep(step)
-  cube.setMeshPositions(0, 0, cubePositionZ + 1)
-  camera.lookAt(cube.mesh.position)
+  const newCubePositionZ = getCubePositionZDistanceStep(step)
+  // if (newCubePositionZ == cube.getMeshPositionZ) {
+    cube.setMeshPositions(0, 0, newCubePositionZ + 1)
+    console.log(newCubePositionZ + 1);
+    camera.lookAt(cube.mesh.position)
+  // }
 
   if (_DEBUG_) {
     console.log(cube.getMeshPositionZ())
@@ -196,4 +201,4 @@ function SetStepDatasWithCheckCubePosition(cubePositionZ) {
   // console.log(stepDatas)
 }
 
-export { SetProgressWorldStep, ResetProgressWorldStep, SetStepDatasWithCheckCubePosition }
+export { SetStepDatasWithCheckCubePosition }
