@@ -13,7 +13,9 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 import { GetMaterialsOnMTLFile } from './functions'
 
 // Custom progressWorldBar function
-import { SetProgressWorldStep, GetMaxStep, ResetProgressWorldStep, SetStepDatasWithPlatformHeight, GetProgressWorldStep } from './ui/customProgressWorldBar/progressBar.js'
+import { 
+  SetStepDatasWithCheckCubePosition
+} from './ui/customProgressWorldBar/progressBar.js'
 
 // Lightning importations
 import { Sky } from './objects/sky'
@@ -29,7 +31,7 @@ import { City } from './objects/OBJObjects/city'
  * Base
  */
 // Reload cache
-// THREE.Cache.enabled = true
+THREE.Cache.enabled = true
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -62,8 +64,8 @@ container.appendChild(stats.dom)
  */
 const scifiObject = new GLTFLoader()
 const signMenu = new GLTFLoader()
-const cube = new Cube()
-const platform = new Platform()
+export const cube = new Cube()
+export const platform = new Platform()
 const text = new Text()
 const car = new Car()
 const city = new City()
@@ -72,7 +74,7 @@ const city = new City()
  * Add to scene the Objects
  */
 // Platform Object
-scene.add(platform.setMeshPositions(0, -0.5, 2))
+scene.add(platform.setMeshPositions(0, -0.5, 49))
 
 // Cube Object
 scene.add(cube.setMeshPosRot(0, 0, 0, 0, Math.PI, 0))
@@ -111,6 +113,7 @@ signMenu.load(
     gltf.scene.scale.set(0.03, 0.03, 0.03)
     gltf.scene.position.set(-2, platform.getMeshPositionY(), 5)
     gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
+    console.log('tete')
 
     scene.add(gltf.scene)
   },
@@ -163,7 +166,7 @@ scene.add(ambientLight)
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
+export const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
 // camera.position.x = cube.mesh.position.x + 2
 camera.position.z = -5
 camera.position.y = 2
@@ -259,27 +262,10 @@ const tick = () => {
   // );
 
   // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the cube position Z on the platform
-  // let platformDividedSteps = platform.getPlatformGeometryHeight() / GetMaxStep()
-  let cubePositionZ = cube.getMeshPositionZ()
-  
   if (speed !== 0) {
-    // console.log(cubePositionZ)
-    // if (platformDividedSteps > 0) {
-    //   if (cubePositionZ <= (GetProgressWorldStep() + 1) && cubePositionZ > 0 && GetProgressWorldStep() + 1 < GetMaxStep() ) {
-    //     SetProgressWorldStep(GetProgressWorldStep() + 1)
-    //   }
-    // } else if (platformDividedSteps < 0) {
-    //   if (cubePositionZ <= (GetProgressWorldStep() - 1) && cubePositionZ < 0 && GetProgressWorldStep() - 1 < GetMaxStep() ) {
-    //     SetProgressWorldStep(GetProgressWorldStep() - 1)
-    //   }
-    // } else {
-    //   ResetProgressWorldStep()
-    // }
-    SetStepDatasWithPlatformHeight(GetMaxStep(), platform.getPlatformGeometryHeight(), cubePositionZ)
+    let cubePositionZ = cube.getMeshPositionZ()
+    SetStepDatasWithCheckCubePosition(cubePositionZ)
   }
-
-  // console.log(getMaxStep())
-  // console.log(platformDividedSteps / 1000)
 
   // Update controls mouse
   controls.update()

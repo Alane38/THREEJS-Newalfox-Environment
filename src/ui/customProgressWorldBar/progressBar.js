@@ -1,43 +1,64 @@
+import { camera, cube, platform } from '../../builder'
+
 const _DEBUG_ = false
+
+const stepDatas = []
 
 let stepUsed = 0
 
+const next_step_button = document.getElementById('next_step_button')
 const multi_step = document.getElementById('multi-step')
 
+const multi_step_childrensLength = multi_step.children.length - 1
+
 // Initialisation click add functions
+next_step_button.addEventListener('click', () => {
+  nextProgressWorldStep()
+})
+
 Object.keys(multi_step.children).map((index) => {
   let stepElement = multi_step.children[index] // html element
   let stepElementStepId = stepElement.getAttribute('id') // step-1
   let stepElementId = Number(stepElementStepId.substring(5)) // 1
 
-  if (stepElementId === 1) {
-    if (_DEBUG_) {
-      console.log('start init')
-    }
-
-    stepElement.addEventListener('click', () => {
-      nextProgressWorldStep()
-    })
-  } else {
-    if (_DEBUG_) {
-      console.log('next continue init')
-    }
-
-    stepElement.setAttribute('value', index)
-
-    stepElement.addEventListener('click', () => {
-      SetProgressWorldStep(multi_step.children[index].getAttribute('value'))
-    })
+  if (_DEBUG_) {
+    console.log('next continue init')
   }
+
+  stepElement.setAttribute('value', stepElementId)
+
+  stepElement.addEventListener('click', () => {
+    SetProgressWorldStep(stepElement.getAttribute('value'))
+  })
 })
+
+// Set data on stepDatas with the platform height
+const calculStepDistance = platform.getPlatformGeometryHeight() / multi_step_childrensLength
+
+let stepDistanceValue = 0
+
+// boucle ajoutant la distance à l'étape selon la taille de la plateforme
+for (let step = 0; step <= multi_step_childrensLength; step++) {
+  if (stepDistanceValue === 0) {
+    stepDatas.push({
+      stepValue: step,
+      distance: 0.5
+    })
+    stepDistanceValue = calculStepDistance
+  } else {
+    stepDatas.push({
+      stepValue: step,
+      distance: (stepDistanceValue += calculStepDistance)
+    })
+    stepDistanceValue += calculStepDistance
+  }
+}
 
 // Next step
 function nextProgressWorldStep() {
   if (_DEBUG_) {
     console.log('next')
   }
-
-  let multi_step_childrensLength = multi_step.children.length - 1 // ex: 3
 
   if (stepUsed === multi_step_childrensLength) {
     if (_DEBUG_) {
@@ -50,21 +71,7 @@ function nextProgressWorldStep() {
 
   stepUsed += 1
 
-  Object.keys(multi_step.children).map((index) => {
-    let stepElement = multi_step.children[index] // html element
-    let stepElementStepId = stepElement.getAttribute('id') // step-1
-    let stepElementId = Number(stepElementStepId.substring(5)) // 1
-
-    if (index == stepUsed) {
-      let actual_step_element = document.getElementById('step-' + stepElementId)
-      let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
-
-      ancien_step_element.classList.remove('is-active')
-      ancien_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(100%)'
-      ancien_step_element.querySelector('.progress-bar__bar').style.webkitTransform = 'translateY(100%)'
-      actual_step_element.classList.add('is-active')
-    }
-  })
+  SetProgressWorldStep(stepUsed)
 
   if (_DEBUG_) {
     console.log(stepUsed)
@@ -83,7 +90,7 @@ function ResetProgressWorldStep() {
     let actual_step_element = document.getElementById('step-' + stepElementId)
     let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
 
-    if (stepElementId == 1) {
+    if (stepElementId == 0) {
       actual_step_element.classList.add('is-active')
     } else {
       actual_step_element.classList.remove('is-active')
@@ -98,6 +105,33 @@ function ResetProgressWorldStep() {
 
   if (_DEBUG_) {
     console.log(stepUsed)
+  }
+}
+
+// Get cube positionZ distance with step
+function getCubePositionZDistanceStep(step) {
+  let result
+
+  stepDatas.forEach((element) => {
+    const data = element
+
+    if (_DEBUG_) {
+      console.log(data)
+    }
+
+    if (Number(data.stepValue) == Number(step)) {
+      if (_DEBUG_) {
+        console.log(step)
+        console.log(data.stepValue)
+        console.log(data.distance)
+      }
+
+      result = data.distance
+    }
+  })
+
+  if (result) {
+    return result
   }
 }
 
@@ -125,62 +159,39 @@ function SetProgressWorldStep(step) {
     }
   })
 
+  // Set positionZ of cube on the world
+  const cubePositionZ = getCubePositionZDistanceStep(step)
+  cube.setMeshPositions(0, 0, cubePositionZ + 1)
+  camera.lookAt(cube.mesh.position)
+
   if (_DEBUG_) {
+    console.log(cube.getMeshPositionZ())
     console.log(stepUsed)
   }
 }
 
-// Get progress world step
-function GetProgressWorldStep() {
-  return stepUsed
-}
-
-// Get the max step (length)
-function GetMaxStep() {
-  return multi_step.children.length
-}
-
 // Get step data with position cube/platform world
-function SetStepDatasWithPlatformHeight(maxStep, platformHeight, cubePositionZ) {
-  const actualStep = GetProgressWorldStep()
-  const calculStepDistance = platformHeight / GetMaxStep()
-  const stepDatas = []
-  // let lastPositionZ = 0
-
-  let stepDistanceValue = 0
-
-  // boucle ajoutant la distance à l'étape selon la taille de la plateforme
-  for (let step = 1; step <= maxStep; step++) {
-    if (stepDistanceValue === 0) {
-      stepDatas.push({
-        stepValue: step,
-        distance: calculStepDistance
-      })
-      stepDistanceValue = calculStepDistance
-    } else {
-      stepDatas.push({
-        stepValue: step,
-        distance: stepDistanceValue += calculStepDistance
-      })
-      stepDistanceValue += calculStepDistance
-    }
-  }
-
+function SetStepDatasWithCheckCubePosition(cubePositionZ) {
   stepDatas.forEach((element) => {
     const data = element
 
     if (Number(cubePositionZ) == data.distance || Number(cubePositionZ) >= data.distance) {
-      console.log('distance atteinte: ' + data.distance)
+      if (_DEBUG_) {
+        console.log('distance atteinte: ' + data.distance)
+      }
+
       SetProgressWorldStep(data.stepValue)
     }
 
-    // vérifier si l'étape ou l'on est, est = à l'étape du foreach
-    if (actualStep == data.stepValue) {
-      console.log(actualStep)
+    if (_DEBUG_) {
+      // vérifier si l'étape ou l'on est, est = à l'étape du foreach
+      if (stepUsed == data.stepValue) {
+        console.log(stepUsed)
+      }
     }
   })
 
   // console.log(stepDatas)
 }
 
-export { SetProgressWorldStep, GetMaxStep, ResetProgressWorldStep, SetStepDatasWithPlatformHeight, GetProgressWorldStep }
+export { SetProgressWorldStep, ResetProgressWorldStep, SetStepDatasWithCheckCubePosition }
