@@ -1,6 +1,6 @@
 import { camera, cube, platform } from '../../builder'
 
-const _DEBUG_ = false
+const _DEBUG_ = true
 
 const stepDatas = []
 
@@ -28,7 +28,7 @@ Object.keys(multi_step.children).map((index) => {
   stepElement.setAttribute('value', stepElementId)
 
   stepElement.addEventListener('click', () => {
-    SetProgressWorldStep(stepElement.getAttribute('value'))
+    setProgressWorldStep(stepElement.getAttribute('value'))
   })
 })
 
@@ -42,44 +42,20 @@ for (let step = 0; step <= multi_step_childrensLength; step++) {
   if (stepDistanceValue === 0) {
     stepDatas.push({
       stepValue: step,
-      distance: 0.5
+      distance: 0
     })
     stepDistanceValue = calculStepDistance
   } else {
     stepDatas.push({
       stepValue: step,
-      distance: (stepDistanceValue += calculStepDistance)
+      distance: (stepDistanceValue += calculStepDistance).toFixed(1)
     })
     stepDistanceValue += calculStepDistance
   }
 }
 
-// Next step
-function nextProgressWorldStep() {
-  if (_DEBUG_) {
-    console.log('next')
-  }
-
-  if (stepUsed === multi_step_childrensLength) {
-    if (_DEBUG_) {
-      console.log('end')
-    }
-
-    ResetProgressWorldStep()
-    return
-  }
-
-  stepUsed += 1
-
-  SetProgressWorldStep(stepUsed)
-
-  if (_DEBUG_) {
-    console.log(stepUsed)
-  }
-}
-
 // Reset to default steps
-function ResetProgressWorldStep() {
+function resetProgressWorldStep() {
   stepUsed = 0
 
   Object.keys(multi_step.children).map((index) => {
@@ -103,42 +79,39 @@ function ResetProgressWorldStep() {
     console.log('reset')
   }
 
-  SetProgressWorldStep(stepUsed)
+  setProgressWorldStep(stepUsed)
 
   if (_DEBUG_) {
-    console.log(stepUsed)
+    console.log("stepused: " + stepUsed)
   }
 }
 
-// Get cube positionZ distance with step
-function getCubePositionZDistanceStep(step) {
-  let result
+// Next step
+function nextProgressWorldStep() {
+  if (_DEBUG_) {
+    console.log('next')
+  }
 
-  stepDatas.forEach((element) => {
-    const data = element
-
+  if (stepUsed === multi_step_childrensLength) {
     if (_DEBUG_) {
-      console.log(data)
+      console.log('end')
     }
 
-    if (Number(data.stepValue) == Number(step)) {
-      if (_DEBUG_) {
-        console.log(step)
-        console.log(data.stepValue)
-        console.log(data.distance)
-      }
+    resetProgressWorldStep()
+    return
+  }
 
-      result = data.distance
-    }
-  })
+  stepUsed += 1
 
-  if (result) {
-    return result
+  setProgressWorldStep(stepUsed)
+
+  if (_DEBUG_) {
+    console.log("stepused: " + stepUsed)
   }
 }
 
 // Set custom step
-function SetProgressWorldStep(step) {
+function setProgressWorldStep(step) {
   stepUsed = Number(step)
 
   Object.keys(multi_step.children).map((index) => {
@@ -149,7 +122,6 @@ function SetProgressWorldStep(step) {
     let actual_step_element = document.getElementById('step-' + stepElementId)
     let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
 
-    // TODO: A FIX ICI (Cliquer sur le dernier step pour voir l'erreur)
     if (index <= stepUsed) {
       actual_step_element.classList.remove('is-active')
       if (actual_step_element.querySelector('.progress-bar__bar')) {
@@ -166,14 +138,41 @@ function SetProgressWorldStep(step) {
   // Set positionZ of cube on the world
   const newCubePositionZ = getCubePositionZDistanceStep(step)
   // if (newCubePositionZ == cube.getMeshPositionZ) {
-    cube.setMeshPositions(0, 0, newCubePositionZ + 1)
-    console.log(newCubePositionZ + 1);
-    camera.lookAt(cube.mesh.position)
+  cube.setMeshPositions(0, 0, newCubePositionZ + 1)
+  camera.lookAt(cube.mesh.position)
   // }
-
+  
   if (_DEBUG_) {
-    console.log(cube.getMeshPositionZ())
-    console.log(stepUsed)
+    console.log("newCubePositionZ: " + newCubePositionZ)
+    console.log("cube.getMeshPositionZ(): " + cube.getMeshPositionZ())
+    console.log("stepused: " + stepUsed)
+  }
+}
+
+// Get cube positionZ distance with step
+function getCubePositionZDistanceStep(step) {
+  let result
+
+  stepDatas.forEach((element) => {
+    const data = element
+
+    if (_DEBUG_) {
+      console.log(data)
+    }
+
+    if (Number(data.stepValue) == Number(step)) {
+      if (_DEBUG_) {
+        console.log("step data: " + step)
+        console.log("stepValue data: " + data.stepValue)
+        console.log("distance data: " + data.distance)
+      }
+
+      result = data.distance
+    }
+  })
+
+  if (result) {
+    return result
   }
 }
 
@@ -182,20 +181,22 @@ function SetStepDatasWithCheckCubePosition(cubePositionZ) {
   stepDatas.forEach((element) => {
     const data = element
 
-    if (Number(cubePositionZ) == data.distance || Number(cubePositionZ) >= data.distance) {
+    let cubePosition = cubePositionZ.toFixed(1)
+
+    if (cubePosition == data.distance || cubePosition >= data.distance) {
       if (_DEBUG_) {
-        console.log('distance atteinte: ' + data.distance)
+        console.log('distance reached: ' + data.distance)
       }
 
-      SetProgressWorldStep(data.stepValue)
+      setProgressWorldStep(data.stepValue)
     }
 
-    if (_DEBUG_) {
-      // vérifier si l'étape ou l'on est, est = à l'étape du foreach
-      if (stepUsed == data.stepValue) {
-        console.log(stepUsed)
-      }
-    }
+    // if (_DEBUG_) {
+    //   // verfiy if the step where the cube have the same position = step of the foreach
+    //   if (stepUsed == data.stepValue) {
+    //     console.log("stepused: " + stepUsed)
+    //   }
+    // }
   })
 
   // console.log(stepDatas)
