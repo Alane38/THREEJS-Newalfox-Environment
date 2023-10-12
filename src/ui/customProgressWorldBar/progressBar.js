@@ -148,10 +148,12 @@ function SetProgressWorldStep(step) {
     let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
 
     // TODO: A FIX ICI (Cliquer sur le dernier step pour voir l'erreur)
-    if (index <= stepUsed) {
+    if (index <= stepUsed && index) {
       actual_step_element.classList.remove('is-active')
-      actual_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(100%)'
-      actual_step_element.querySelector('.progress-bar__bar').style.webkitTransform = 'translateY(100%)'
+      if (actual_step_element.querySelector('.progress-bar__bar')) {
+        actual_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(100%)'
+        actual_step_element.querySelector('.progress-bar__bar').style.webkitTransform = 'translateY(100%)'
+      }
     } else {
       ancien_step_element.classList.add('is-active')
       ancien_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(0%)'

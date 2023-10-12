@@ -21,7 +21,7 @@ import {
 import { Sky } from './objects/sky'
 
 // Objects importations
-import { Cube } from './objects/cube'
+import { Cube } from './objects/cube' 
 import { Platform } from './objects/platform'
 import { Text } from './objects/text'
 import { Car } from './objects/OBJObjects/car'
