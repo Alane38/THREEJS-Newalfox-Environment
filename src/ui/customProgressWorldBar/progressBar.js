@@ -1,6 +1,6 @@
 import { camera, cube, platform } from '../../builder'
 
-const _DEBUG_ = true
+const _DEBUG_ = false
 
 const stepDatas = []
 
@@ -42,13 +42,13 @@ for (let step = 0; step <= multi_step_childrensLength; step++) {
   if (stepDistanceValue === 0) {
     stepDatas.push({
       stepValue: step,
-      distance: 0
+      distance: 0.5
     })
     stepDistanceValue = calculStepDistance
   } else {
     stepDatas.push({
       stepValue: step,
-      distance: (stepDistanceValue += calculStepDistance).toFixed(1)
+      distance: (stepDistanceValue += calculStepDistance)
     })
     stepDistanceValue += calculStepDistance
   }
@@ -110,7 +110,7 @@ function nextProgressWorldStep() {
   }
 }
 
-// Set custom step
+// Set custom step on world
 function setProgressWorldStep(step) {
   stepUsed = Number(step)
 
@@ -137,16 +137,40 @@ function setProgressWorldStep(step) {
 
   // Set positionZ of cube on the world
   const newCubePositionZ = getCubePositionZDistanceStep(step)
-  // if (newCubePositionZ == cube.getMeshPositionZ) {
-  cube.setMeshPositions(0, 0, newCubePositionZ + 1)
+  cube.setMeshPositions(0, 0, newCubePositionZ)
   camera.lookAt(cube.mesh.position)
-  // }
   
   if (_DEBUG_) {
     console.log("newCubePositionZ: " + newCubePositionZ)
     console.log("cube.getMeshPositionZ(): " + cube.getMeshPositionZ())
     console.log("stepused: " + stepUsed)
   }
+}
+
+// Set custom step on interface
+function setProgressInterfaceStep(step) {
+  stepUsed = Number(step)
+
+  Object.keys(multi_step.children).map((index) => {
+    let stepElement = multi_step.children[index] // html element
+    let stepElementStepId = stepElement.getAttribute('id') // step-1
+    let stepElementId = Number(stepElementStepId.substring(5)) // 1
+
+    let actual_step_element = document.getElementById('step-' + stepElementId)
+    let ancien_step_element = document.getElementById('step-' + (stepElementId - 1))
+
+    if (index <= stepUsed) {
+      actual_step_element.classList.remove('is-active')
+      if (actual_step_element.querySelector('.progress-bar__bar')) {
+        actual_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(100%)'
+        actual_step_element.querySelector('.progress-bar__bar').style.webkitTransform = 'translateY(100%)'
+      }
+    } else {
+      ancien_step_element.classList.add('is-active')
+      ancien_step_element.querySelector('.progress-bar__bar').style.transform = 'translateY(0%)'
+      ancien_step_element.querySelector('.progress-bar__bar').style.webkitTransform = 'translateY(0%)'
+    }
+  })
 }
 
 // Get cube positionZ distance with step
@@ -168,6 +192,7 @@ function getCubePositionZDistanceStep(step) {
       }
 
       result = data.distance
+      return result
     }
   })
 
@@ -181,14 +206,15 @@ function SetStepDatasWithCheckCubePosition(cubePositionZ) {
   stepDatas.forEach((element) => {
     const data = element
 
-    let cubePosition = cubePositionZ.toFixed(1)
+    let cubePosition = cubePositionZ
 
     if (cubePosition == data.distance || cubePosition >= data.distance) {
       if (_DEBUG_) {
         console.log('distance reached: ' + data.distance)
       }
 
-      setProgressWorldStep(data.stepValue)
+      setProgressInterfaceStep(data.stepValue)
+      return
     }
 
     // if (_DEBUG_) {
@@ -199,7 +225,7 @@ function SetStepDatasWithCheckCubePosition(cubePositionZ) {
     // }
   })
 
-  // console.log(stepDatas)
+  console.log(stepDatas)
 }
 
 export { SetStepDatasWithCheckCubePosition }
