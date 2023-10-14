@@ -71,11 +71,12 @@ const city = new City()
 /**
  * Add to scene the Objects
  */
-// Platform Object
-scene.add(platform.setMeshPositions(0, -0.5, 49))
 
 // Cube Object
 scene.add(cube.setMeshPosRot(0, 0, 0, 0, Math.PI, 0))
+
+// Platform Object
+scene.add(platform.setMeshPositions(0, -0.5, (platform.getPlatformGeometryHeight() / 2) - 1))
 
 // Newalfox Text Object
 text
@@ -165,8 +166,8 @@ scene.add(ambientLight)
 // Base camera
 export const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
 // camera.position.x = cube.mesh.position.x + 2
-camera.position.z = -5
-camera.position.y = 2
+camera.position.z = -10
+camera.position.y = 4
 // camera.lookAt( scene.position );
 scene.add(camera)
 
@@ -224,9 +225,9 @@ const tick = () => {
   speed = 0.0
 
   if (keys.w) {
-    speed = -0.1
+    speed = -0.5
   } else if (keys.s) {
-    speed = 0.1
+    speed = 0.5
   }
 
   velocity += (speed - velocity) * 0.3

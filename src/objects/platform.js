@@ -11,7 +11,7 @@ export class Platform {
 
   // Create default object
   constructor() {
-    this.geometry = new THREE.PlaneGeometry(3, 100)
+    this.geometry = new THREE.PlaneGeometry(3, 300)
     this.material = new THREE.MeshBasicMaterial({
       color: '#E2E2E2',
       opacity: 0.1,
@@ -19,7 +19,7 @@ export class Platform {
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.rotation.x = -Math.PI / 2// -Math.PI / 2
-    this.mesh.position.y = -100
+    // this.mesh.position.y = -100
     this.mesh.name = "Platform"
   }
 

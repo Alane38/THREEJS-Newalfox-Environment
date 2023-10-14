@@ -33,7 +33,7 @@ Object.keys(multi_step.children).map((index) => {
 })
 
 // Set data on stepDatas with the platform height
-const calculStepDistance = platform.getPlatformGeometryHeight() / multi_step_childrensLength
+const calculStepDistance = (platform.getPlatformGeometryHeight() / 2) / multi_step_childrensLength
 
 let stepDistanceValue = 0
 
@@ -225,7 +225,7 @@ function SetStepDatasWithCheckCubePosition(cubePositionZ) {
     // }
   })
 
-  console.log(stepDatas)
+  // console.log(stepDatas)
 }
 
 export { SetStepDatasWithCheckCubePosition }
