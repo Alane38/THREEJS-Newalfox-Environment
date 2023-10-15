@@ -121,11 +121,14 @@ signMenu.load(
   }
 )
 
+let car2
+
 // Car Object
 car
   .init('Car', 10, -2, 5, null, -135, null)
   .then((carObject) => {
     console.log('The car was loaded successfully')
+    car2 = carObject
     scene.add(carObject)
   })
   .catch((error) => {
@@ -225,9 +228,9 @@ const tick = () => {
   speed = 0.0
 
   if (keys.w) {
-    speed = -0.5
+    speed = -0.3
   } else if (keys.s) {
-    speed = 0.5
+    speed = 0.3
   }
 
   velocity += (speed - velocity) * 0.3
@@ -264,6 +267,9 @@ const tick = () => {
     let cubePositionZ = cube.getMeshPositionZ()
     SetStepDatasWithCheckCubePosition(cubePositionZ)
   }
+
+  
+// console.log(car2)
 
   // Update controls mouse
   controls.update()
