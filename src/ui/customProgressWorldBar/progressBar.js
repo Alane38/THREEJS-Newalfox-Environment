@@ -1,4 +1,4 @@
-import { camera, cube, platform } from '../../builder'
+import { camera, characterHitBox, platform } from '../../builder'
 
 const _DEBUG_ = false
 
@@ -135,14 +135,14 @@ function setProgressWorldStep(step) {
     }
   })
 
-  // Set positionZ of cube on the world
+  // Set positionZ of characterHitBox on the world
   const newCubePositionZ = getCubePositionZDistanceStep(step)
-  cube.setMeshPositions(0, 0, newCubePositionZ)
-  camera.lookAt(cube.mesh.position)
+  characterHitBox.setMeshPositions(0, 0, newCubePositionZ)
+  camera.lookAt(characterHitBox.mesh.position)
   
   if (_DEBUG_) {
     console.log("newCubePositionZ: " + newCubePositionZ)
-    console.log("cube.getMeshPositionZ(): " + cube.getMeshPositionZ())
+    console.log("characterHitBox.getMeshPositionZ(): " + characterHitBox.getMeshPositionZ())
     console.log("stepused: " + stepUsed)
   }
 }
@@ -173,7 +173,7 @@ function setProgressInterfaceStep(step) {
   })
 }
 
-// Get cube positionZ distance with step
+// Get characterHitBox positionZ distance with step
 function getCubePositionZDistanceStep(step) {
   let result
 
@@ -201,7 +201,7 @@ function getCubePositionZDistanceStep(step) {
   }
 }
 
-// Get step data with position cube/platform world
+// Get step data with position characterHitBox/platform world
 function SetStepDatasWithCheckCubePosition(cubePositionZ) {
   stepDatas.forEach((element) => {
     const data = element
@@ -218,7 +218,7 @@ function SetStepDatasWithCheckCubePosition(cubePositionZ) {
     }
 
     // if (_DEBUG_) {
-    //   // verfiy if the step where the cube have the same position = step of the foreach
+    //   // verfiy if the step where the characterHitBox have the same position = step of the foreach
     //   if (stepUsed == data.stepValue) {
     //     console.log("stepused: " + stepUsed)
     //   }

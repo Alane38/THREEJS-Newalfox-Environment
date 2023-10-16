@@ -19,11 +19,12 @@ import { SetStepDatasWithCheckCubePosition } from './ui/customProgressWorldBar/p
 import { Sky } from './objects/sky'
 
 // Objects importations
-import { Cube } from './objects/cube'
+import { CharacterHitBox } from './objects/character_hit_box.js'
 import { Platform } from './objects/platform'
 import { Text } from './objects/text'
 import { Car } from './objects/OBJObjects/car'
 import { City } from './objects/OBJObjects/city'
+import { degToRad, radToDeg } from 'three/src/math/MathUtils.js'
 
 /**
  * Base
@@ -60,9 +61,9 @@ container.appendChild(stats.dom)
 /**
  * Init Class Objects
  */
-const scifiObject = new GLTFLoader()
+const characterModel = new GLTFLoader()
 const signMenu = new GLTFLoader()
-export const cube = new Cube()
+export const characterHitBox = new CharacterHitBox()
 export const platform = new Platform()
 const text = new Text()
 const car = new Car()
@@ -72,16 +73,19 @@ const city = new City()
  * Add to scene the Objects
  */
 
-// Cube Object
-scene.add(cube.setMeshPosRot(0, 0, 0, 0, Math.PI, 0))
+// CharacterHitBox Object
+scene.add(characterHitBox.setMeshPosRot(0, 0, 0, 0, Math.PI / -2, 0))
 
 // Platform Object
-scene.add(platform.setMeshPositions(0, -0.5, (platform.getPlatformGeometryHeight() / 2) - 1))
+scene.add(platform.setMeshPositions(0, -0.5, platform.getPlatformGeometryHeight() / 2 - 1))
 
 // Newalfox Text Object
 text
-  .init('Newalfox-Text', cube.getMeshPositionX(), cube.getMeshPositionY() + 1, cube.getMeshPositionZ())
+  .init('Newalfox-Text', characterHitBox.getMeshPositionX(), characterHitBox.getMeshPositionY() + 3, characterHitBox.getMeshPositionZ() + 10)
   .then((textMesh) => {
+    textMesh.scale.set(3, 3, 3)
+    textMesh.rotation.set(null, degToRad(180), null)
+
     // The font has been loaded successfully
     console.log('The font has been loaded successfully')
     scene.add(textMesh)
@@ -90,17 +94,17 @@ text
     console.error('An error was detected to load the font', error)
   })
 
-let model
+let character
 
-// Sci-Fi Object
-scifiObject.load(
+// Character Object
+characterModel.load(
   './blender_models/final_fox_skateboard_model.glb',
   function (gltf) {
     gltf.scene.scale.set(10, 10, 10)
-    gltf.scene.position.set(text.mesh.position.x, text.mesh.position.y + 2, text.mesh.position.z)
-    // gltf.scene.position.set(text.mesh.position.x, text.mesh.position.y + 2, text.mesh.position.z)
 
-    model = gltf.scene
+    character = gltf.scene
+
+    console.log('The character has been loaded successfully')
     scene.add(gltf.scene)
   },
   undefined,
@@ -125,19 +129,19 @@ signMenu.load(
   }
 )
 
-let car2
 
 // Car Object
-car
-  .init('Car', 10, -2, 5, null, -135, null)
-  .then((carObject) => {
-    console.log('The car was loaded successfully')
-    car2 = carObject
-    scene.add(carObject)
-  })
-  .catch((error) => {
-    console.error('An error was detected to load the car', error)
-  })
+// let car2
+// car
+//   .init('Car', 30, -2, 5, null, -135, null)
+//   .then((carObject) => {
+//     console.log('The car was loaded successfully')
+//     car2 = carObject
+//     scene.add(carObject)
+//   })
+//   .catch((error) => {
+//     console.error('An error was detected to load the car', error)
+//   })
 
 // city.init('City', 10, -4, 5, null, null, null)
 // .then((carObject) => {
@@ -172,8 +176,8 @@ scene.add(ambientLight)
  */
 // Base camera
 export const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000)
-// camera.position.x = cube.mesh.position.x + 2
-camera.position.z = -10
+// camera.position.x = characterHitBox.mesh.position.x + 2
+camera.position.z = -12
 camera.position.y = 4
 // camera.lookAt( scene.position );
 scene.add(camera)
@@ -220,6 +224,13 @@ document.body.addEventListener('keyup', function (e) {
   if (keys[key] !== undefined) keys[key] = false
 })
 
+let hitbox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())
+hitbox.setFromObject(characterHitBox.mesh)
+
+function checkCollisions() {
+  console.log(hitbox.intersectsBox)
+}
+
 /**
  * Animate
  */
@@ -238,15 +249,15 @@ const tick = () => {
   }
 
   velocity += (speed - velocity) * 0.3
-  cube.mesh.translateZ(velocity)
+  characterHitBox.mesh.translateX(-velocity)
 
   if (keys.a) {
-    cube.mesh.rotateY(0.05)
+    characterHitBox.mesh.rotateY(0.05)
   } else if (keys.d) {
-    cube.mesh.rotateY(-0.05)
+    characterHitBox.mesh.rotateY(-0.05)
   }
 
-  a.lerp(cube.mesh.position, 0.4)
+  a.lerp(characterHitBox.mesh.position, 0.4)
   b.copy(goal.position)
 
   dir.copy(a).sub(b).normalize()
@@ -254,32 +265,37 @@ const tick = () => {
   goal.position.addScaledVector(dir, dis)
 
   // Camera
-  camera.lookAt(cube.mesh.position)
+  camera.lookAt(characterHitBox.mesh.position)
 
-  // Custom
-  text.setMeshPositions(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
-  text.setMeshRotations(cube.mesh.rotation.x, cube.mesh.rotation.y, cube.mesh.rotation.z)
+  // Character
+  if (character) {
+    character.position.set(characterHitBox.mesh.position.x, characterHitBox.mesh.position.y - 0.05, characterHitBox.mesh.position.z)
+    character.rotation.set(characterHitBox.mesh.rotation.x, characterHitBox.mesh.rotation.y, characterHitBox.mesh.rotation.z)
 
-  if (model) {
-    model.position.set(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
-    model.rotation.set(cube.mesh.rotation.x, cube.mesh.rotation.y, cube.mesh.rotation.z)
+
+    hitbox.copy(characterHitBox.geometry.boundingBox).applyMatrix4(characterHitBox.mesh.matrixWorld)
+
+    checkCollisions()
+
+    console.log(hitbox)
   }
 
-  // cube.material.color.setRGB(
+
+  // characterHitBox.material.color.setRGB(
   //   Math.random(255),
   //   Math.random(255),
   //   Math.random(255)
   // );
 
-  // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the cube position Z on the platform
+  // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the characterHitBox position Z on the platform
   if (speed !== 0) {
-    let cubePositionZ = cube.getMeshPositionZ()
+    let cubePositionZ = characterHitBox.getMeshPositionZ()
     SetStepDatasWithCheckCubePosition(cubePositionZ)
   }
 
-  
-// console.log(car2)
+  //Check collisions on the characterhitbox.
 
+  
   // Update controls mouse
   controls.update()
 
