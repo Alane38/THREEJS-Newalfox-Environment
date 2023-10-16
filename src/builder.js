@@ -90,13 +90,17 @@ text
     console.error('An error was detected to load the font', error)
   })
 
+let model
+
 // Sci-Fi Object
 scifiObject.load(
-  './objects/GLTFObjects/SciFi-Cube/scene.gltf',
+  './blender_models/final_fox_skateboard_model.glb',
   function (gltf) {
     gltf.scene.scale.set(10, 10, 10)
     gltf.scene.position.set(text.mesh.position.x, text.mesh.position.y + 2, text.mesh.position.z)
+    // gltf.scene.position.set(text.mesh.position.x, text.mesh.position.y + 2, text.mesh.position.z)
 
+    model = gltf.scene
     scene.add(gltf.scene)
   },
   undefined,
@@ -255,6 +259,11 @@ const tick = () => {
   // Custom
   text.setMeshPositions(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
   text.setMeshRotations(cube.mesh.rotation.x, cube.mesh.rotation.y, cube.mesh.rotation.z)
+
+  if (model) {
+    model.position.set(cube.mesh.position.x, cube.mesh.position.y + 1, cube.mesh.position.z)
+    model.rotation.set(cube.mesh.rotation.x, cube.mesh.rotation.y, cube.mesh.rotation.z)
+  }
 
   // cube.material.color.setRGB(
   //   Math.random(255),
