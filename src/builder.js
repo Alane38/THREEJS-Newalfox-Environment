@@ -237,7 +237,7 @@ keys = {
   ArrowLeft: false,
   ArrowDown: false,
   ArrowRight: false,
-  ArrowUp: false,
+  ArrowUp: false
 }
 
 document.body.addEventListener('keydown', function (e) {
@@ -249,12 +249,12 @@ document.body.addEventListener('keyup', function (e) {
   if (keys[key] !== undefined) keys[key] = false
 })
 
-let hitbox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())
-hitbox.setFromObject(characterHitBox.mesh)
+// let hitbox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())
+// hitbox.setFromObject(characterHitBox.mesh)
 
-function checkCollisions() {
-  console.log(hitbox.intersectsBox(hitbox))
-}
+// function checkCollisions() {
+//   console.log(hitbox.intersectsBox(hitbox))
+// }
 
 /**
  * Animate
@@ -297,9 +297,9 @@ const tick = () => {
     character.position.set(characterHitBox.mesh.position.x, characterHitBox.mesh.position.y - 0.05, characterHitBox.mesh.position.z)
     character.rotation.set(characterHitBox.mesh.rotation.x, characterHitBox.mesh.rotation.y, characterHitBox.mesh.rotation.z)
 
-    hitbox.copy(characterHitBox.geometry.boundingBox).applyMatrix4(characterHitBox.mesh.matrixWorld)
+    // hitbox.copy(characterHitBox.geometry.boundingBox).applyMatrix4(characterHitBox.mesh.matrixWorld)
 
-    checkCollisions()
+    // checkCollisions()
   }
 
   // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the characterHitBox position Z on the platform
@@ -351,13 +351,18 @@ window.addEventListener('pointermove', (e) => {
     }
   })
 
-  intersects.forEach((hit) => {
-    // If a hit has not been flagged as hovered we must call onPointerOver
-    // Call onPointerMove
-    if (hit.object.material.color) {
-      // hit.object.material.color.setRGB(Math.random(255), Math.random(255), Math.random(255))
-    }
-  })
+  // Hover actions
+  // intersects.forEach((hit) => {
+  //   // If a hit has not been flagged as hovered we must call onPointerOver
+  //   // Call onPointerMove
+  //   if (hit.object.material.color) {
+  //     // hit.object.material.color.setRGB(Math.random(255), Math.random(255), Math.random(255))
+  //   }
+
+  //   if (hit.object.name != "") {
+  //     console.log(hit.object.name)
+  //   }
+  // })
 })
 
 window.addEventListener('click', (e) => {
@@ -378,8 +383,6 @@ window.addEventListener('click', (e) => {
         materialsList.forEach((materialName) => {
           if (hitObjectName == materialName) {
             console.log(objectName.name)
-            // } else {
-            //   console.log(hitObjectName)
           }
         })
       })
@@ -387,7 +390,11 @@ window.addEventListener('click', (e) => {
 
     verifyNameObjectClickIsOnFolder()
 
-    console.log(hit)
+    if (hit.object.name != '') {
+      console.log(hit.object.name)
+    }
+
+    // console.log(hit)
   })
 })
 
