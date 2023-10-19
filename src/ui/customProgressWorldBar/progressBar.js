@@ -136,7 +136,7 @@ function setProgressWorldStep(step) {
   })
 
   // Set positionZ of characterHitBox on the world
-  const newCubePositionZ = getCubePositionZDistanceStep(step)
+  const newCubePositionZ = getCharacterHitBoxPositionZDistanceStep(step)
   characterHitBox.setMeshPositions(0, 0, newCubePositionZ)
   camera.lookAt(characterHitBox.mesh.position)
   
@@ -174,7 +174,7 @@ function setProgressInterfaceStep(step) {
 }
 
 // Get characterHitBox positionZ distance with step
-function getCubePositionZDistanceStep(step) {
+function getCharacterHitBoxPositionZDistanceStep(step) {
   let result
 
   stepDatas.forEach((element) => {

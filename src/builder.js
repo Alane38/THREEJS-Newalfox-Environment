@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import Stats from './customModules/stats.module.js'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { degToRad } from 'three/src/math/MathUtils.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
@@ -24,7 +25,7 @@ import { Platform } from './objects/platform'
 import { Text } from './objects/text'
 import { Car } from './objects/OBJObjects/car'
 import { City } from './objects/OBJObjects/city'
-import { degToRad, radToDeg } from 'three/src/math/MathUtils.js'
+import { SignMenu } from './objects/GLTFObjects/signmenu.js'
 
 /**
  * Base
@@ -62,8 +63,8 @@ container.appendChild(stats.dom)
  * Init Class Objects
  */
 const characterModel = new GLTFLoader()
-const signMenu = new GLTFLoader()
 export const characterHitBox = new CharacterHitBox()
+const signMenu = new SignMenu()
 export const platform = new Platform()
 const text = new Text()
 const car = new Car()
@@ -94,9 +95,8 @@ text
     console.error('An error was detected to load the font', error)
   })
 
-let character
-
 // Character Object
+let character
 characterModel.load(
   './blender_models/final_fox_skateboard_model.glb',
   function (gltf) {
@@ -114,21 +114,41 @@ characterModel.load(
 )
 
 // SignMenu Object
-signMenu.load(
-  './objects/GLTFObjects/signMenu/chalkboard_sign_v1.glb',
-  function (gltf) {
-    gltf.scene.scale.set(0.03, 0.03, 0.03)
-    gltf.scene.position.set(-2, platform.getMeshPositionY(), 5)
-    gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
+signMenu
+  .init('SignMenu', -2, platform.getMeshPositionY(), 5, 0, platform.getMeshRotationX(), 0)
+  .then((gltf) => {
+    // gltf.scale.set(3, 3, 3)
+    // gltf.rotation.set(null, degToRad(180), null)
 
-    scene.add(gltf.scene)
-  },
-  undefined,
-  function (error) {
-    console.error(error)
-  }
-)
+    // The font has been loaded successfully
+    console.log('The font has been loaded successfully')
+    scene.add(gltf)
+  })
+  .catch((error) => {
+    console.error('An error was detected to load the font', error)
+  })
+// signMenu.load(
+//   './objects/GLTFObjects/signMenu/chalkboard_sign_v1.glb',
+//   function (gltf) {
+//     gltf.scene.position.set(-2, platform.getMeshPositionY(), 5)
+//     gltf.scene.rotation.set(0, platform.getMeshRotationX(), 0)
 
+//     const video = document.getElementById('video')
+//     video.play()
+//     video.addEventListener('play', function () {
+//       this.currentTime = 3
+//     })
+
+//     texture = new THREE.VideoTexture(video)
+//     texture.colorSpace = THREE.SRGBColorSpace
+
+//     scene.add(gltf.scene)
+//   },
+//   undefined,
+//   function (error) {
+//     console.error(error)
+//   }
+// )
 
 // Car Object
 // let car2
@@ -209,18 +229,23 @@ goal = new THREE.Object3D()
 goal.add(camera)
 
 keys = {
-  a: false,
-  s: false,
-  d: false,
-  w: false
+  KeyA: false,
+  KeyS: false,
+  KeyD: false,
+  KeyW: false,
+
+  ArrowLeft: false,
+  ArrowDown: false,
+  ArrowRight: false,
+  ArrowUp: false,
 }
 
 document.body.addEventListener('keydown', function (e) {
-  const key = e.code.replace('Key', '').toLowerCase()
+  const key = e.code
   if (keys[key] !== undefined) keys[key] = true
 })
 document.body.addEventListener('keyup', function (e) {
-  const key = e.code.replace('Key', '').toLowerCase()
+  const key = e.code
   if (keys[key] !== undefined) keys[key] = false
 })
 
@@ -228,7 +253,7 @@ let hitbox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())
 hitbox.setFromObject(characterHitBox.mesh)
 
 function checkCollisions() {
-  console.log(hitbox.intersectsBox)
+  console.log(hitbox.intersectsBox(hitbox))
 }
 
 /**
@@ -242,18 +267,18 @@ const tick = () => {
   // Fluidity - Controls - https://codepen.io/Fyrestar/pen/oNxERMr
   speed = 0.0
 
-  if (keys.w) {
+  if (keys.KeyW || keys.ArrowUp) {
     speed = -0.3
-  } else if (keys.s) {
+  } else if (keys.KeyS || keys.ArrowDown) {
     speed = 0.3
   }
 
   velocity += (speed - velocity) * 0.3
   characterHitBox.mesh.translateX(-velocity)
 
-  if (keys.a) {
+  if (keys.KeyA || keys.ArrowLeft) {
     characterHitBox.mesh.rotateY(0.05)
-  } else if (keys.d) {
+  } else if (keys.KeyD || keys.ArrowRight) {
     characterHitBox.mesh.rotateY(-0.05)
   }
 
@@ -272,20 +297,10 @@ const tick = () => {
     character.position.set(characterHitBox.mesh.position.x, characterHitBox.mesh.position.y - 0.05, characterHitBox.mesh.position.z)
     character.rotation.set(characterHitBox.mesh.rotation.x, characterHitBox.mesh.rotation.y, characterHitBox.mesh.rotation.z)
 
-
     hitbox.copy(characterHitBox.geometry.boundingBox).applyMatrix4(characterHitBox.mesh.matrixWorld)
 
     checkCollisions()
-
-    console.log(hitbox)
   }
-
-
-  // characterHitBox.material.color.setRGB(
-  //   Math.random(255),
-  //   Math.random(255),
-  //   Math.random(255)
-  // );
 
   // Verify the progression step world with the platform length (height) ans set it automatically to next step with comparison of the characterHitBox position Z on the platform
   if (speed !== 0) {
@@ -295,7 +310,6 @@ const tick = () => {
 
   //Check collisions on the characterhitbox.
 
-  
   // Update controls mouse
   controls.update()
 
